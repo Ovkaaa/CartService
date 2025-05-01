@@ -1,0 +1,25 @@
+@CartService.API_HostAddress = http://localhost:5027
+@CartId = 1
+@ItemId = 1
+
+GET {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items
+Accept: application/json
+
+###
+
+POST {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items
+Accept: application/json
+{
+  "Id": 1,
+  "Name": "",
+  "ImageUrl": "",
+  "ImageAlt": "",
+  "Price": 0.0,
+  "Quantity": 1
+}
+###
+
+DELETE {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items/{{ItemId}}
+Accept: application/json
+
+###

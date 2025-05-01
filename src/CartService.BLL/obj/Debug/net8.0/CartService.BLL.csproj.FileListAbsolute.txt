@@ -1,0 +1,15 @@
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\bin\Debug\net8.0\CartService.BLL.deps.json
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\bin\Debug\net8.0\CartService.BLL.dll
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\bin\Debug\net8.0\CartService.BLL.pdb
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\bin\Debug\net8.0\CartService.DAL.dll
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\bin\Debug\net8.0\CartService.DAL.pdb
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.csproj.AssemblyReference.cache
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.AssemblyInfoInputs.cache
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.AssemblyInfo.cs
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.csproj.CoreCompileInputs.cache
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartServ.BAB04313.Up2Date
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.dll
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\refint\CartService.BLL.dll
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\CartService.BLL.pdb
+C:\Users\roman_maliuha\Study\CartService\src\CartService.BLL\obj\Debug\net8.0\ref\CartService.BLL.dll

@@ -1,0 +1,81 @@
+[
+  {
+    "ContainingType": "CartService.API.Endpoints.CartItemsEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CAddCartEndpoints\u003Eb__0_0",
+    "RelativePath": "api/cart/{cartId}/items/",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetCartItems"
+  },
+  {
+    "ContainingType": "CartService.API.Endpoints.CartItemsEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CAddCartEndpoints\u003Eb__0_1",
+    "RelativePath": "api/cart/{cartId}/items/",
+    "HttpMethod": "POST",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "item",
+        "Type": "CartService.DAL.Entities.CartItem",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "AddCartItem"
+  },
+  {
+    "ContainingType": "CartService.API.Endpoints.CartItemsEndpoints\u002B\u003C\u003Ec",
+    "Method": "\u003CAddCartEndpoints\u003Eb__0_2",
+    "RelativePath": "api/cart/{cartId}/items/{itemId}",
+    "HttpMethod": "DELETE",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "itemId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "DeleteCartItem"
+  }
+]
