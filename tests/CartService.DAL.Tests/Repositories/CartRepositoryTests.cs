@@ -9,7 +9,7 @@ public class CartRepositoryTests
 {
     private readonly Mock<ILiteDatabase> _liteDatabaseMock = new();
 
-    private CartRepository _cartRepository;
+    private readonly CartRepository _cartRepository;
 
     public CartRepositoryTests()
     {
@@ -28,7 +28,7 @@ public class CartRepositoryTests
         _liteDatabaseMock.Setup(db => db.GetCollection<Cart>("carts", It.IsAny<BsonAutoId>())).Returns(collectionMock.Object);
 
         // Act
-        var result = await _cartRepository.GetByIdAsync(123);
+        var result = await _cartRepository.GetCartByIdAsync(123, CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedCart, result);
@@ -46,7 +46,7 @@ public class CartRepositoryTests
         _liteDatabaseMock.Setup(db => db.GetCollection<Cart>("carts", It.IsAny<BsonAutoId>())).Returns(collectionMock.Object);
 
         // Act
-        await _cartRepository.SaveAsync(cart);
+        await _cartRepository.SaveAsync(cart, CancellationToken.None);
 
         // Assert
         collectionMock.Verify(c => c.Upsert(cart.Id, cart), Times.Once);

@@ -9,11 +9,11 @@ public class CartServiceTests
     private readonly Mock<ICartRepository> _cartRepositoryMock = new();
     private readonly Mock<IProductCatalogClient> _productCatalogClientMock = new();
 
-    private BLL.Services.CartService _cartService;
+    private readonly BLL.Services.CartItemService _cartService;
 
     public CartServiceTests()
     {
-        _cartService = new BLL.Services.CartService(
+        _cartService = new BLL.Services.CartItemService(
             _cartRepositoryMock.Object,
             _productCatalogClientMock.Object);
     }
@@ -24,10 +24,10 @@ public class CartServiceTests
         // Arrange
         var cartId = 1;
         var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 1, Name = "Test", Price = 10, Quantity = 1 }] };
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(cartId)).ReturnsAsync(cart);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act
-        var result = await _cartService.GetItemsAsync(cartId);
+        var result = await _cartService.GetCartItemsAsync(cartId, CancellationToken.None);
 
         // Assert
         Assert.Single(result);
@@ -38,10 +38,10 @@ public class CartServiceTests
     public async Task GetItemsAsync_ReturnsEmptyList_WhenCartDoesNotExist()
     {
         // Arrange
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Cart)null!);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Cart)null!);
 
         // Act
-        var result = await _cartService.GetItemsAsync(0);
+        var result = await _cartService.GetCartItemsAsync(0, CancellationToken.None);
 
         // Assert
         Assert.Empty(result);
@@ -54,16 +54,16 @@ public class CartServiceTests
         var cartId = 1;
         var newItem = new CartItem { Id = 1, Name = "Product", Price = 5, Quantity = 2 };
 
-        _productCatalogClientMock.Setup(p => p.ProductExistsAsync(newItem.Id)).ReturnsAsync(true);
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(cartId)).ReturnsAsync((Cart)null!);
+        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(newItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync((Cart)null!);
 
         Cart? savedCart = null;
-        _cartRepositoryMock.Setup(r => r.SaveAsync(It.IsAny<Cart>()))
-                           .Callback<Cart>(c => savedCart = c)
+        _cartRepositoryMock.Setup(r => r.SaveAsync(It.IsAny<Cart>(), It.IsAny<CancellationToken>()))
+                           .Callback<Cart, CancellationToken>((cart, _) => savedCart = cart)
                            .Returns(Task.CompletedTask);
 
         // Act
-        await _cartService.AddItemAsync(cartId, newItem);
+        await _cartService.AddCartItemAsync(cartId, newItem, CancellationToken.None);
 
         // Assert
         Assert.NotNull(savedCart);
@@ -77,11 +77,11 @@ public class CartServiceTests
         // Arrange
         var item = new CartItem { Id = 2 };
 
-        _productCatalogClientMock.Setup(p => p.ProductExistsAsync(item.Id)).ReturnsAsync(false);
+        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(item.Id, It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            _cartService.AddItemAsync(1, item));
+            _cartService.AddCartItemAsync(1, item, CancellationToken.None));
     }
 
     [Fact]
@@ -94,15 +94,15 @@ public class CartServiceTests
 
         var cart = new Cart { Id = cartId, Items = [existingItem] };
 
-        _productCatalogClientMock.Setup(p => p.ProductExistsAsync(updatedItem.Id)).ReturnsAsync(true);
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(cartId)).ReturnsAsync(cart);
+        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(updatedItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act
-        await _cartService.AddItemAsync(cartId, updatedItem);
+        await _cartService.AddCartItemAsync(cartId, updatedItem, CancellationToken.None);
 
         // Assert
         Assert.Equal(5, cart.Items.First(i => i.Id == 1).Quantity);
-        _cartRepositoryMock.Verify(r => r.SaveAsync(cart), Times.Once);
+        _cartRepositoryMock.Verify(r => r.SaveAsync(cart, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -112,26 +112,26 @@ public class CartServiceTests
         var cartId = 1;
         var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 1 }] };
 
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(cartId)).ReturnsAsync(cart);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act
-        await _cartService.RemoveItemAsync(cartId, 1);
+        await _cartService.RemoveCartItemAsync(cartId, 1, CancellationToken.None);
 
         // Assert
         Assert.Empty(cart.Items);
-        _cartRepositoryMock.Verify(r => r.SaveAsync(cart), Times.Once);
+        _cartRepositoryMock.Verify(r => r.SaveAsync(cart, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
     public async Task RemoveItemAsync_DoesNothing_WhenCartIsNull()
     {
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Cart)null!);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync((Cart)null!);
 
         // Act
-        await _cartService.RemoveItemAsync(0, 1);
+        await _cartService.RemoveCartItemAsync(0, 1, CancellationToken.None);
 
         // Assert
-        _cartRepositoryMock.Verify(r => r.SaveAsync(It.IsAny<Cart>()), Times.Never);
+        _cartRepositoryMock.Verify(r => r.SaveAsync(It.IsAny<Cart>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -141,13 +141,13 @@ public class CartServiceTests
         var cartId = 1;
         var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 2 }] };
 
-        _cartRepositoryMock.Setup(r => r.GetByIdAsync(cartId)).ReturnsAsync(cart);
+        _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act
-        await _cartService.RemoveItemAsync(cartId, 1);
+        await _cartService.RemoveCartItemAsync(cartId, 1, CancellationToken.None);
 
         // Assert
         Assert.Single(cart.Items);
-        _cartRepositoryMock.Verify(r => r.SaveAsync(It.IsAny<Cart>()), Times.Never);
+        _cartRepositoryMock.Verify(r => r.SaveAsync(It.IsAny<Cart>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 }

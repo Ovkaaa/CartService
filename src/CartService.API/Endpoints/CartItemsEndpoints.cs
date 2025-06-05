@@ -10,27 +10,27 @@ public static class CartItemsEndpoints
         var cartItemsRouteGroup = routeBuilder.MapGroup("api/cart/{cartId}/items");
 
         cartItemsRouteGroup
-            .MapGet(string.Empty, async (int cartId, ICartService cartService) =>
+            .MapGet(string.Empty, async (int cartId, ICartItemService cartItemService, CancellationToken cancellationToken) =>
             {
-                var items = await cartService.GetItemsAsync(cartId);
+                var items = await cartItemService.GetCartItemsAsync(cartId, cancellationToken);
                 return Results.Ok(items);
             })
             .WithName("GetCartItems")
             .WithOpenApi();
 
         cartItemsRouteGroup
-            .MapPost(string.Empty, async (int cartId, CartItem item, ICartService cartService) =>
+            .MapPost(string.Empty, async (int cartId, CartItem item, ICartItemService cartItemService, CancellationToken cancellationToken) =>
             {
-                await cartService.AddItemAsync(cartId, item);
+                await cartItemService.AddCartItemAsync(cartId, item, cancellationToken);
                 return Results.Ok();
             })
             .WithName("AddCartItem")
             .WithOpenApi();
 
         cartItemsRouteGroup
-            .MapDelete("{itemId}", async (int cartId, int itemId, ICartService cartService) =>
+            .MapDelete("{itemId}", async (int cartId, int itemId, ICartItemService cartItemService, CancellationToken cancellationToken) =>
             {
-                await cartService.RemoveItemAsync(cartId, itemId);
+                await cartItemService.RemoveCartItemAsync(cartId, itemId, cancellationToken);
                 return Results.Ok();
             })
             .WithName("DeleteCartItem")

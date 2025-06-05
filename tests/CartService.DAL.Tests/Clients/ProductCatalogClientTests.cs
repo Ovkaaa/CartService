@@ -10,7 +10,7 @@ public class ProductCatalogClientTests
 {
     private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock = new();
 
-    private ProductCatalogClient _productCatalogClient;
+    private readonly ProductCatalogClient _productCatalogClient;
 
     public ProductCatalogClientTests()
     {
@@ -28,7 +28,7 @@ public class ProductCatalogClientTests
         // Arrange
         _httpMessageHandlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync",
-                ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.ToString().Contains("/api/catalog/products/1")),
+                ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.ToString().Contains("/api/v1/products/1")),
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(new HttpResponseMessage
             {
@@ -37,7 +37,7 @@ public class ProductCatalogClientTests
             });
 
         // Act
-        var exists = await _productCatalogClient.ProductExistsAsync(1);
+        var exists = await _productCatalogClient.IsProductExistsAsync(1, CancellationToken.None);
 
         // Assert
         Assert.True(exists);
@@ -58,7 +58,7 @@ public class ProductCatalogClientTests
             });
 
         // Act
-        var exists = await _productCatalogClient.ProductExistsAsync(999);
+        var exists = await _productCatalogClient.IsProductExistsAsync(999, CancellationToken.None);
 
         // Assert
         Assert.False(exists);
@@ -79,6 +79,6 @@ public class ProductCatalogClientTests
 
         // Act & Assert
         await Assert.ThrowsAsync<HttpRequestException>(() =>
-            _productCatalogClient.ProductExistsAsync(123));
+            _productCatalogClient.IsProductExistsAsync(123, CancellationToken.None));
     }
 }

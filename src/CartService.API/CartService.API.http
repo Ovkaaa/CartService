@@ -2,12 +2,12 @@
 @CartId = 1
 @ItemId = 1
 
-GET {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items
+GET {{CartService.API_HostAddress}}/api/v1/carts/{{CartId}}/items
 Accept: application/json
 
 ###
 
-POST {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items
+POST {{CartService.API_HostAddress}}/api/v1/carts/{{CartId}}/items
 Accept: application/json
 {
   "Id": 1,
@@ -19,7 +19,7 @@ Accept: application/json
 }
 ###
 
-DELETE {{CartService.API_HostAddress}}/api/cart/{{CartId}}/items/{{ItemId}}
+DELETE {{CartService.API_HostAddress}}/api/v1/carts/{{CartId}}/items/{{ItemId}}
 Accept: application/json
 
 ###
