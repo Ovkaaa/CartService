@@ -4,6 +4,6 @@ namespace CartService.DAL.Interfaces;
 
 public interface ICartRepository
 {
-    Task<Cart?> GetByIdAsync(int cartId);
-    Task SaveAsync(Cart cart);
+    Task<Cart?> GetCartByIdAsync(int cartId, CancellationToken cancellationToken);
+    Task SaveAsync(Cart cart, CancellationToken cancellationToken);
 }

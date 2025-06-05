@@ -2,5 +2,5 @@
 
 public interface IProductCatalogClient
 {
-    Task<bool> ProductExistsAsync(int productId);
+    Task<bool> IsProductExistsAsync(int productId, CancellationToken cancellationToken);
 }

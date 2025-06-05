@@ -5,14 +5,9 @@ using CartService.DAL.Entities;
 
 namespace CartService.API.Tests.Integration.Tests;
 
-public class CartEndpointsTests : IClassFixture<CustomWebApplicationFactory>
+public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
 {
-    private readonly HttpClient _client;
-
-    public CartEndpointsTests(CustomWebApplicationFactory factory)
-    {
-        _client = factory.CreateClient();
-    }
+    private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
     public async Task AddItem_ShouldAddToCart()

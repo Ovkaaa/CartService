@@ -9,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddBLL(this IServiceCollection services)
     {
-        services.AddScoped<ICartService, BLL.Services.CartService>();
+        services.AddScoped<ICartItemService, BLL.Services.CartItemService>();
 
         return services;
     }

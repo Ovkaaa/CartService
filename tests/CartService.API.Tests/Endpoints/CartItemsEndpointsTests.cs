@@ -11,7 +11,7 @@ namespace CartService.API.Tests.Endpoints;
 
 public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly Mock<ICartService> _cartServiceMock = new();
+    private readonly Mock<ICartItemService> _cartItemServiceMock = new();
 
     private readonly HttpClient _client;
 
@@ -21,7 +21,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
         {
             builder.ConfigureTestServices(services =>
             {
-                services.AddScoped(_ => _cartServiceMock.Object);
+                services.AddScoped(_ => _cartItemServiceMock.Object);
             });
         }).CreateClient();
     }
@@ -30,8 +30,8 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
     public async Task GetCartItems_ReturnsOk()
     {
         // Arrange
-        _cartServiceMock
-            .Setup(m => m.GetItemsAsync(1))
+        _cartItemServiceMock
+            .Setup(m => m.GetCartItemsAsync(1, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         // Act
@@ -54,11 +54,14 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        _cartServiceMock.Verify(m =>
-            m.AddItemAsync(1, It.Is<CartItem>(item => item.Id == newItem.Id
-                                                      && item.Name == newItem.Name
-                                                      && item.Price == newItem.Price
-                                                      && item.Quantity == newItem.Quantity)),
+        _cartItemServiceMock.Verify(m =>
+            m.AddCartItemAsync(
+                1,
+                It.Is<CartItem>(item => item.Id == newItem.Id
+                                        && item.Name == newItem.Name
+                                        && item.Price == newItem.Price
+                                        && item.Quantity == newItem.Quantity),
+                It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -70,7 +73,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        _cartServiceMock.Verify(m => m.RemoveItemAsync(1, 2), Times.Once);
+        _cartItemServiceMock.Verify(m => m.RemoveCartItemAsync(1, 2, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
 

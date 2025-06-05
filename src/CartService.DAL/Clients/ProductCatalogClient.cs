@@ -7,10 +7,10 @@ public class ProductCatalogClient(HttpClient httpClient) : IProductCatalogClient
 {
     private readonly HttpClient _httpClient = httpClient;
 
-    public async Task<bool> ProductExistsAsync(int productId)
+    public async Task<bool> IsProductExistsAsync(int productId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync($"/api/catalog/products/{productId}");
+        var response = await _httpClient.GetAsync($"/api/v1/products/{productId}", cancellationToken);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<bool>();
+        return await response.Content.ReadFromJsonAsync<bool>(cancellationToken);
     }
 }
