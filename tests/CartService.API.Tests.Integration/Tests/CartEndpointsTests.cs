@@ -23,12 +23,12 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync($"api/cart/{cartId}/items", item);
+        var response = await _client.PostAsJsonAsync($"api/v1/carts/{cartId}/items", item);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/cart/{cartId}/items");
+        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/v1/carts/{cartId}/items");
         Assert.NotNull(items);
         Assert.Contains(items, i => i.Id == item.Id && i.Quantity == item.Quantity);
     }
@@ -40,7 +40,7 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
         var cartId = 2;
 
         // Act
-        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/cart/{cartId}/items");
+        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/v1/carts/{cartId}/items");
 
         // Assert
         Assert.NotNull(items);
@@ -56,12 +56,12 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
         var updatedItem = new CartItem { Id = 200, Name = "Item", Price = 5.55m, Quantity = 5 };
 
         // Add initial item
-        await _client.PostAsJsonAsync($"api/cart/{cartId}/items", item);
+        await _client.PostAsJsonAsync($"api/v1/cart/{cartId}/items", item);
 
         // Act - update with new quantity
-        await _client.PostAsJsonAsync($"api/cart/{cartId}/items", updatedItem);
+        await _client.PostAsJsonAsync($"api/v1/cart/{cartId}/items", updatedItem);
 
-        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/cart/{cartId}/items");
+        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/v1/carts/{cartId}/items");
 
         // Assert
         Assert.NotNull(items);
@@ -77,15 +77,15 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
         var cartId = 4;
         var item = new CartItem { Id = 300, Name = "DeleteMe", Price = 12.34m, Quantity = 2 };
 
-        await _client.PostAsJsonAsync($"api/cart/{cartId}/items", item);
+        await _client.PostAsJsonAsync($"api/v1/carts/{cartId}/items", item);
 
         // Act
-        var deleteResponse = await _client.DeleteAsync($"api/cart/{cartId}/items/{item.Id}");
+        var deleteResponse = await _client.DeleteAsync($"api/v1/carts/{cartId}/items/{item.Id}");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
 
-        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/cart/{cartId}/items");
+        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/v1/carts/{cartId}/items");
         Assert.NotNull(items);
         Assert.DoesNotContain(items, i => i.Id == item.Id);
     }
@@ -98,12 +98,12 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
         var nonExistingItemId = 999;
 
         // Act
-        var deleteResponse = await _client.DeleteAsync($"api/cart/{cartId}/items/{nonExistingItemId}");
+        var deleteResponse = await _client.DeleteAsync($"api/v1/carts/{cartId}/items/{nonExistingItemId}");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
 
-        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/cart/{cartId}/items");
+        var items = await _client.GetFromJsonAsync<List<CartItem>>($"api/v1/carts/{cartId}/items");
         Assert.NotNull(items);
         Assert.Empty(items);
     }

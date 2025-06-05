@@ -7,7 +7,7 @@ public static class CartItemsEndpoints
 {
     public static void AddCartEndpoints(this IEndpointRouteBuilder routeBuilder)
     {
-        var cartItemsRouteGroup = routeBuilder.MapGroup("api/cart/{cartId}/items");
+        var cartItemsRouteGroup = routeBuilder.MapGroup("carts/{cartId}/items");
 
         cartItemsRouteGroup
             .MapGet(string.Empty, async (int cartId, ICartItemService cartItemService, CancellationToken cancellationToken) =>

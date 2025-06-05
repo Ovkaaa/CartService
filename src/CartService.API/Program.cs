@@ -1,4 +1,5 @@
 using CartService.API.Endpoints;
+using CartService.API.Extensions;
 using CartService.Application;
 using CartService.Infrastructure;
 
@@ -20,7 +21,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.AddCartEndpoints();
+app.MapEndpoints();
 
 app.Run();
 

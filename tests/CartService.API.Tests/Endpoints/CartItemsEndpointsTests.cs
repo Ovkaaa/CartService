@@ -35,7 +35,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
             .ReturnsAsync([]);
 
         // Act
-        var response = await _client.GetAsync("/api/cart/1/items");
+        var response = await _client.GetAsync("/api/v1/carts/1/items");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -50,7 +50,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
         var newItem = new CartItem { Id = 2, Name = "NewItem", Price = 20, Quantity = 2 };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/api/cart/1/items", newItem);
+        var response = await _client.PostAsJsonAsync("/api/v1/carts/1/items", newItem);
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -69,7 +69,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
     public async Task DeleteCartItem_ReturnsOk()
     {
         // Act
-        var response = await _client.DeleteAsync("/api/cart/1/items/2");
+        var response = await _client.DeleteAsync("/api/v1/carts/1/items/2");
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
