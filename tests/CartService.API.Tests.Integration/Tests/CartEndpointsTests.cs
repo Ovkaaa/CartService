@@ -1,7 +1,9 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using CartService.API.Tests.Integration.Factories;
+﻿using CartService.API.Tests.Integration.Factories;
 using CartService.DAL.Entities;
+using LiteDB;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace CartService.API.Tests.Integration.Tests;
 
@@ -21,6 +23,17 @@ public class CartEndpointsTests(CustomWebApplicationFactory factory) : IClassFix
             Price = 9.99m,
             Quantity = 3
         };
+
+        var liteDatabase = factory.Services.GetRequiredService<ILiteDatabase>();
+        var product = new Product
+        {
+            Id = item.Id,
+            Name = item.Name,
+            Price = item.Price,
+            Amount = 100
+        };
+        var products = liteDatabase.GetCollection<Product>("products");
+        products.Upsert(product.Id, product);
 
         // Act
         var response = await _client.PostAsJsonAsync($"api/v1/carts/{cartId}/items", item);

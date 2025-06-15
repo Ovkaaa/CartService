@@ -1,9 +1,6 @@
-﻿using CartService.API.Tests.Integration.FakeServices;
-using CartService.DAL.Interfaces;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CartService.API.Tests.Integration.Factories;
 
@@ -24,15 +21,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             configBuilder.AddJsonFile(appSettingsFilePath, optional: false, reloadOnChange: true);
             configBuilder.AddEnvironmentVariables();
-        });
-
-        builder.ConfigureServices(services =>
-        {
-            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IProductCatalogClient));
-            if (descriptor != null)
-                services.Remove(descriptor);
-
-            services.AddSingleton<IProductCatalogClient, FakeProductCatalogClient>();
         });
     }
 }

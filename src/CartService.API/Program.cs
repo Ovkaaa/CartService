@@ -1,7 +1,6 @@
-using CartService.API.Endpoints;
 using CartService.API.Extensions;
-using CartService.Application;
-using CartService.Infrastructure;
+using CartService.BLL;
+using CartService.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
