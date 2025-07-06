@@ -1,15 +1,22 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using CartService.BLL.IntegrationEvents.Handlers;
 using CartService.BLL.Interfaces;
+using CartService.BLL.Interfaces.IntegrationEvents;
+using CartService.BLL.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
-namespace CartService.Application;
+namespace CartService.BLL;
 
 [ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static IServiceCollection AddBLL(this IServiceCollection services)
     {
-        services.AddScoped<ICartItemService, BLL.Services.CartItemService>();
+        services.AddSingleton<ICartItemService, CartItemService>();
+        services.AddSingleton<IProductService, ProductService>();
+        
+        services.AddSingleton<IProductCreatedHandler, ProductCreatedHandler>();
+        services.AddSingleton<IProductUpdatedHandler, ProductUpdatedHandler>();
 
         return services;
     }

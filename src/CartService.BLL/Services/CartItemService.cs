@@ -4,24 +4,22 @@ using CartService.DAL.Interfaces;
 
 namespace CartService.BLL.Services;
 
-public class CartItemService(ICartRepository repository, IProductCatalogClient productCatalogClient) : ICartItemService
+public class CartItemService(
+    ICartRepository repository,
+    IProductService productService) : ICartItemService
 {
-    private readonly ICartRepository _repository = repository;
-    private readonly IProductCatalogClient _productCatalogClient = productCatalogClient;
-
     public async Task<IReadOnlyList<CartItem>> GetCartItemsAsync(int cartId, CancellationToken cancellationToken)
     {
-        var cart = await _repository.GetCartByIdAsync(cartId, cancellationToken);
+        var cart = await repository.GetCartByIdAsync(cartId, cancellationToken);
         return cart?.Items ?? [];
     }
 
     public async Task AddCartItemAsync(int cartId, CartItem item, CancellationToken cancellationToken)
     {
-        var exists = await _productCatalogClient.IsProductExistsAsync(item.Id, cancellationToken);
-        if (!exists)
-            throw new InvalidOperationException($"Product with Id {item.Id} does not exist in catalog.");
+        var product = await productService.GetByIdAsync(item.Id, cancellationToken)
+            ?? throw new InvalidOperationException($"Product with Id {item.Id} does not exist in catalog.");
 
-        var cart = await _repository.GetCartByIdAsync(cartId, cancellationToken) ?? new Cart { Id = cartId };
+        var cart = await repository.GetCartByIdAsync(cartId, cancellationToken) ?? new Cart { Id = cartId };
 
         var existing = cart.Items.FirstOrDefault(i => i.Id == item.Id);
         if (existing != null)
@@ -29,19 +27,19 @@ public class CartItemService(ICartRepository repository, IProductCatalogClient p
         else
             cart.Items.Add(item);
 
-        await _repository.SaveAsync(cart, cancellationToken);
+        await repository.SaveAsync(cart, cancellationToken);
     }
 
     public async Task RemoveCartItemAsync(int cartId, int itemId, CancellationToken cancellationToken)
     {
-        var cart = await _repository.GetCartByIdAsync(cartId, cancellationToken);
+        var cart = await repository.GetCartByIdAsync(cartId, cancellationToken);
         if (cart == null) return;
 
         var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
         if (item != null)
         {
             cart.Items.Remove(item);
-            await _repository.SaveAsync(cart, cancellationToken);
+            await repository.SaveAsync(cart, cancellationToken);
         }
     }
 }

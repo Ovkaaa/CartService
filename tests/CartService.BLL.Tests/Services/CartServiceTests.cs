@@ -1,4 +1,5 @@
-﻿using CartService.DAL.Entities;
+﻿using CartService.BLL.Interfaces;
+using CartService.DAL.Entities;
 using CartService.DAL.Interfaces;
 using Moq;
 
@@ -7,7 +8,7 @@ namespace CartService.BLL.Tests.Services;
 public class CartServiceTests
 {
     private readonly Mock<ICartRepository> _cartRepositoryMock = new();
-    private readonly Mock<IProductCatalogClient> _productCatalogClientMock = new();
+    private readonly Mock<IProductService> _productServiceMock = new();
 
     private readonly BLL.Services.CartItemService _cartService;
 
@@ -15,7 +16,7 @@ public class CartServiceTests
     {
         _cartService = new BLL.Services.CartItemService(
             _cartRepositoryMock.Object,
-            _productCatalogClientMock.Object);
+            _productServiceMock.Object);
     }
 
     [Fact]
@@ -54,7 +55,7 @@ public class CartServiceTests
         var cartId = 1;
         var newItem = new CartItem { Id = 1, Name = "Product", Price = 5, Quantity = 2 };
 
-        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(newItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _productServiceMock.Setup(p => p.GetByIdAsync(newItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Product());
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync((Cart)null!);
 
         Cart? savedCart = null;
@@ -77,7 +78,7 @@ public class CartServiceTests
         // Arrange
         var item = new CartItem { Id = 2 };
 
-        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(item.Id, It.IsAny<CancellationToken>())).ReturnsAsync(false);
+        _productServiceMock.Setup(p => p.GetByIdAsync(item.Id, It.IsAny<CancellationToken>())).ReturnsAsync((Product?)null);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
@@ -94,7 +95,7 @@ public class CartServiceTests
 
         var cart = new Cart { Id = cartId, Items = [existingItem] };
 
-        _productCatalogClientMock.Setup(p => p.IsProductExistsAsync(updatedItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        _productServiceMock.Setup(p => p.GetByIdAsync(updatedItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Product());
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act

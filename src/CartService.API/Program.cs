@@ -1,8 +1,11 @@
-using CartService.API.Endpoints;
-using CartService.Application;
-using CartService.Infrastructure;
+using CartService.API.Auth;
+using CartService.API.Extensions;
+using CartService.BLL;
+using CartService.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuth(builder.Configuration);
 
 builder.Services.AddBLL();
 builder.Services.AddDAL(builder.Configuration);
@@ -20,7 +23,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.AddCartEndpoints();
+app.MapEndpoints();
 
 app.Run();
 
