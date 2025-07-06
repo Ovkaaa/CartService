@@ -4,5 +4,5 @@ namespace CartService.BLL.Interfaces.IntegrationEvents;
 
 public interface IProductCreatedHandler
 {
-    Task HandleAsync(ProductCreatedIntegrationEvent @event, CancellationToken cancellationToken);
+    Task HandleAsync(ProductCreatedIntegrationEvent productCreatedEvent, CancellationToken cancellationToken);
 }

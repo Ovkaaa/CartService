@@ -16,6 +16,7 @@ public class CartItemService(
 
     public async Task AddCartItemAsync(int cartId, CartItem item, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(item);
         var product = await productService.GetByIdAsync(item.Id, cancellationToken)
             ?? throw new InvalidOperationException($"Product with Id {item.Id} does not exist in catalog.");
 

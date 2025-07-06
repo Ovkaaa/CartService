@@ -24,7 +24,8 @@ public class CartServiceTests
     {
         // Arrange
         var cartId = 1;
-        var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 1, Name = "Test", Price = 10, Quantity = 1 }] };
+        var cart = new Cart { Id = cartId };
+        cart.Items.Add(new CartItem { Id = 1, Name = "Test", Price = 10, Quantity = 1 });
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
         // Act
@@ -93,8 +94,8 @@ public class CartServiceTests
         var existingItem = new CartItem { Id = 1, Quantity = 1 };
         var updatedItem = new CartItem { Id = 1, Quantity = 5 };
 
-        var cart = new Cart { Id = cartId, Items = [existingItem] };
-
+        var cart = new Cart { Id = cartId };
+        cart.Items.Add(existingItem);
         _productServiceMock.Setup(p => p.GetByIdAsync(updatedItem.Id, It.IsAny<CancellationToken>())).ReturnsAsync(new Product());
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
@@ -111,7 +112,8 @@ public class CartServiceTests
     {
         // Arrange
         var cartId = 1;
-        var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 1 }] };
+        var cart = new Cart { Id = cartId };
+        cart.Items.Add(new CartItem { Id = 1 });
 
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 
@@ -140,7 +142,8 @@ public class CartServiceTests
     {
         // Arrange
         var cartId = 1;
-        var cart = new Cart { Id = cartId, Items = [new CartItem { Id = 2 }] };
+        var cart = new Cart { Id = cartId };
+        cart.Items.Add(new CartItem { Id = 2 });
 
         _cartRepositoryMock.Setup(r => r.GetCartByIdAsync(cartId, It.IsAny<CancellationToken>())).ReturnsAsync(cart);
 

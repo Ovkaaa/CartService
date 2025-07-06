@@ -6,25 +6,26 @@ namespace CartService.BLL.IntegrationEvents.Handlers;
 
 public class ProductUpdatedHandler(IProductRepository productRepository) : IProductUpdatedHandler
 {
-    public async Task HandleAsync(ProductUpdatedIntegrationEvent @event, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProductUpdatedIntegrationEvent productUpdatedEvent, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(@event.ProductId, cancellationToken);
+        ArgumentNullException.ThrowIfNull(productUpdatedEvent);
+        var product = await productRepository.GetByIdAsync(productUpdatedEvent.ProductId, cancellationToken);
 
         if (product is null)
         {
             product = new Product
             {
-                Id = @event.ProductId,
-                Name = @event.Name,
-                Price = @event.Price,
-                Amount = @event.Amount
+                Id = productUpdatedEvent.ProductId,
+                Name = productUpdatedEvent.Name,
+                Price = productUpdatedEvent.Price,
+                Amount = productUpdatedEvent.Amount
             };
             await productRepository.AddAsync(product, cancellationToken);
         }
 
-        product.Name = @event.Name;
-        product.Price = @event.Price;
-        product.Amount = @event.Amount;
+        product.Name = productUpdatedEvent.Name;
+        product.Price = productUpdatedEvent.Price;
+        product.Amount = productUpdatedEvent.Amount;
 
         await productRepository.UpdateAsync(product, cancellationToken);
     }

@@ -17,6 +17,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
 
     public CartItemsEndpointsTests(WebApplicationFactory<Program> factory)
     {
+        ArgumentNullException.ThrowIfNull(factory);
         _client = factory.WithWebHostBuilder(builder =>
         {
             builder.ConfigureTestServices(services =>
@@ -51,7 +52,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/v1/carts/1/items", newItem);
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         _cartItemServiceMock.Verify(m =>
@@ -70,7 +71,7 @@ public class CartItemsEndpointsTests : IClassFixture<WebApplicationFactory<Progr
     {
         // Act
         var response = await _client.DeleteAsync("/api/v1/carts/1/items/2");
-        
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         _cartItemServiceMock.Verify(m => m.RemoveCartItemAsync(1, 2, It.IsAny<CancellationToken>()), Times.Once);
