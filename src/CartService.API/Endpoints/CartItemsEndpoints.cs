@@ -1,4 +1,5 @@
-﻿using CartService.BLL.Interfaces;
+﻿using CartService.API.Auth;
+using CartService.BLL.Interfaces;
 using CartService.DAL.Entities;
 
 namespace CartService.API.Endpoints;
@@ -16,6 +17,7 @@ public static class CartItemsEndpoints
                 return Results.Ok(items);
             })
             .WithName("GetCartItems")
+            .RequireAuthorization(AuthPolicy.CanRead)
             .WithOpenApi();
 
         cartItemsRouteGroup
@@ -25,6 +27,7 @@ public static class CartItemsEndpoints
                 return Results.Ok();
             })
             .WithName("AddCartItem")
+            .RequireAuthorization(AuthPolicy.CanCreate)
             .WithOpenApi();
 
         cartItemsRouteGroup
@@ -34,6 +37,7 @@ public static class CartItemsEndpoints
                 return Results.Ok();
             })
             .WithName("DeleteCartItem")
+            .RequireAuthorization(AuthPolicy.CanDelete)
             .WithOpenApi();
     }
 }
