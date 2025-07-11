@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace CartService.DAL;
 
 [ExcludeFromCodeCoverage]
-public static class DependencyInjection
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDAL(this IServiceCollection services, IConfiguration config)
     {

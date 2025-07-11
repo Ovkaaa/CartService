@@ -8,20 +8,22 @@ public class ProductRepository(ILiteDatabase liteDb) : IProductRepository
 {
     private const string ProductCollectionName = "products";
 
-    public Task AddAsync(Product product, CancellationToken _)
+    public Task AddAsync(Product product, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(product);
         Upsert(product);
         return Task.CompletedTask;
     }
 
-    public Task<Product?> GetByIdAsync(int productId, CancellationToken _)
+    public Task<Product?> GetByIdAsync(int productId, CancellationToken cancellationToken)
     {
         var products = liteDb.GetCollection<Product?>(ProductCollectionName);
         return Task.FromResult(products.FindById(productId));
     }
 
-    public Task UpdateAsync(Product product, CancellationToken _)
+    public Task UpdateAsync(Product product, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(product);
         Upsert(product);
         return Task.CompletedTask;
     }

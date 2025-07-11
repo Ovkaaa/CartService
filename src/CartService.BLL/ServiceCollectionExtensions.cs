@@ -8,13 +8,14 @@ using System.Diagnostics.CodeAnalysis;
 namespace CartService.BLL;
 
 [ExcludeFromCodeCoverage]
-public static class DependencyInjection
+public static class ServiceCollectionExtensions
+
 {
     public static IServiceCollection AddBLL(this IServiceCollection services)
     {
         services.AddSingleton<ICartItemService, CartItemService>();
         services.AddSingleton<IProductService, ProductService>();
-        
+
         services.AddSingleton<IProductCreatedHandler, ProductCreatedHandler>();
         services.AddSingleton<IProductUpdatedHandler, ProductUpdatedHandler>();
 

@@ -1,6 +1,7 @@
 using Azure.Messaging.ServiceBus;
 using CartService.BLL.IntegrationEvents;
 using CartService.BLL.Interfaces.IntegrationEvents;
+using CartService.Product.Consumer.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -16,15 +17,16 @@ public class UpdateProductConsumerFunction(
         ServiceBusReceivedMessage message,
         ServiceBusMessageActions messageActions)
     {
-        logger.LogInformation("Message ID: {id}", message.MessageId);
-        logger.LogInformation("Message Body: {body}", message.Body);
-        logger.LogInformation("Message Content-Type: {contentType}", message.ContentType);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(messageActions);
 
-        var @event = message.Body.ToObjectFromJson<ProductUpdatedIntegrationEvent>();
+        logger.LogProcessingMessage(message.MessageId);
 
-        if (@event is not null)
+        var productUpdatedEvent = message.Body.ToObjectFromJson<ProductUpdatedIntegrationEvent>();
+
+        if (productUpdatedEvent is not null)
         {
-            await handler.HandleAsync(@event, CancellationToken.None);
+            await handler.HandleAsync(productUpdatedEvent, CancellationToken.None);
         }
 
         await messageActions.CompleteMessageAsync(message);

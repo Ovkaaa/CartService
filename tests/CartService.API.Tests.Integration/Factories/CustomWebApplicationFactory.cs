@@ -10,6 +10,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
         builder.ConfigureAppConfiguration((_, configBuilder) =>
         {
             string appSettingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, appsettingsFileName);

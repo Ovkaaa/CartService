@@ -6,14 +6,15 @@ namespace CartService.BLL.IntegrationEvents.Handlers;
 
 public class ProductCreatedHandler(IProductRepository productRepository) : IProductCreatedHandler
 {
-    public async Task HandleAsync(ProductCreatedIntegrationEvent @event, CancellationToken cancellationToken)
+    public async Task HandleAsync(ProductCreatedIntegrationEvent productCreatedEvent, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(productCreatedEvent);
         var product = new Product
         {
-            Id = @event.ProductId,
-            Name = @event.Name,
-            Price = @event.Price,
-            Amount = @event.Amount
+            Id = productCreatedEvent.ProductId,
+            Name = productCreatedEvent.Name,
+            Price = productCreatedEvent.Price,
+            Amount = productCreatedEvent.Amount
         };
 
         await productRepository.AddAsync(product, cancellationToken);
