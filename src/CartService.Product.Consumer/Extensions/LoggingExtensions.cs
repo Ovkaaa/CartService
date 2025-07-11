@@ -8,10 +8,10 @@ public static class LoggingExtensions
         LoggerMessage.Define<string>(
             LogLevel.Information,
             new EventId(1000, nameof(LogProcessingMessage)),
-            "Processing Message with ID: {Id}");
+            "Processing Message with content: {Content}");
 
-    public static void LogProcessingMessage(this ILogger logger, string id)
+    public static void LogProcessingMessage(this ILogger logger, string content)
     {
-        _logMessageId(logger, id, null);
+        _logMessageId(logger, content, null);
     }
 }

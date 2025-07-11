@@ -1,9 +1,9 @@
-using Azure.Messaging.ServiceBus;
 using CartService.BLL.IntegrationEvents;
 using CartService.BLL.Interfaces.IntegrationEvents;
 using CartService.Product.Consumer.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace CartService.Product.Consumer.Consumers;
 
@@ -13,22 +13,17 @@ public class UpdateProductConsumerFunction(
 {
     [Function(nameof(UpdateProductConsumerFunction))]
     public async Task Run(
-        [ServiceBusTrigger("%ProductUpdatedQueue%", Connection = "ServiceBus:ConnectionString")]
-        ServiceBusReceivedMessage message,
-        ServiceBusMessageActions messageActions)
+        [RabbitMQTrigger("%RabbitMQ:UpdatedProductQueue%", ConnectionStringSetting = "RabbitMQ:Connection")] string message,
+        FunctionContext context)
     {
         ArgumentNullException.ThrowIfNull(message);
-        ArgumentNullException.ThrowIfNull(messageActions);
+        logger.LogProcessingMessage(message);
 
-        logger.LogProcessingMessage(message.MessageId);
-
-        var productUpdatedEvent = message.Body.ToObjectFromJson<ProductUpdatedIntegrationEvent>();
+        var productUpdatedEvent = JsonSerializer.Deserialize<ProductUpdatedIntegrationEvent>(message);
 
         if (productUpdatedEvent is not null)
         {
             await handler.HandleAsync(productUpdatedEvent, CancellationToken.None);
         }
-
-        await messageActions.CompleteMessageAsync(message);
     }
 }
